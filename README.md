@@ -17,7 +17,7 @@ This is an MCP server that provides access to creative goods trade statistics th
 
 ## Examples
 
-* Get creative goods trade statistics (optionally filtered by year range)
+* Get creative goods trade statistics of Hong Kong
 
 ## Setup
 

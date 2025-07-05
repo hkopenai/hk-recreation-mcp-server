@@ -1,11 +1,21 @@
+"""
+Module for testing the creative goods trade data fetching and processing.
+This module contains unit tests to verify the functionality of the creative goods trade tools.
+"""
+
 import unittest
 from unittest.mock import patch
 from hkopenai.hk_recreation_mcp_server.tool_creative_goods_trade import (
     fetch_creative_goods_data,
-    get_creative_goods_trade
+    get_creative_goods_trade,
 )
 
+
 class TestCreativeGoodsTrade(unittest.TestCase):
+    """
+    Test class for verifying the functionality of creative goods trade data processing.
+    This class tests data fetching and processing logic with mocked CSV data.
+    """
     CSV_DATA = """Year,CI_Goods_Cat,Trade_Type,Values,Percentage,Last Update
 2025,1,1,47873,999.9%,31/03/2025
 2025,2,1,177,999.9%,31/03/2025
@@ -16,40 +26,57 @@ class TestCreativeGoodsTrade(unittest.TestCase):
 2023,2,3,982377,999.9%,31/03/2023"""
 
     def setUp(self):
-        self.mock_requests = patch('requests.get').start()
+        """
+        Set up test fixtures before each test method.
+        Mocks the requests.get method to return predefined CSV data for testing.
+        """
+        self.mock_requests = patch("requests.get").start()
         mock_response = self.mock_requests.return_value
         mock_response.text = self.CSV_DATA
-        mock_response.encoding = 'utf-8'
+        mock_response.encoding = "utf-8"
         self.addCleanup(patch.stopall)
 
     def test_fetch_creative_goods_data(self):
+        """
+        Test fetching creative goods data from a mocked CSV source.
+        Verifies the correct number of records and specific field values.
+        """
         result = fetch_creative_goods_data()
         self.assertEqual(len(result), 7)
-        self.assertEqual(result[0]['Year'], '2025')
-        self.assertEqual(result[3]['CI_Goods_Cat'], '1')
-        self.assertEqual(result[5]['Trade_Type'], '3')
+        self.assertEqual(result[0]["Year"], "2025")
+        self.assertEqual(result[3]["CI_Goods_Cat"], "1")
+        self.assertEqual(result[5]["Trade_Type"], "3")
 
     def test_get_creative_goods_trade(self):
+        """
+        Test processing creative goods trade data with and without year filters.
+        Verifies the correct mapping of categories and trade types, and filtering by year.
+        """
         # Test without year filter
         result = get_creative_goods_trade()
         self.assertEqual(len(result), 7)
-        self.assertEqual(result[0]['year'], 2025)
-        self.assertEqual(result[0]['category'], "Advertising")
-        self.assertEqual(result[3]['trade_type'], "Re-exports")
+        self.assertEqual(result[0]["year"], 2025)
+        self.assertEqual(result[0]["category"], "Advertising")
+        self.assertEqual(result[3]["trade_type"], "Re-exports")
 
         # Test with year filter
         result = get_creative_goods_trade(start_year=2024, end_year=2024)
         self.assertEqual(len(result), 2)
-        self.assertEqual(result[0]['year'], 2024)
-        self.assertEqual(result[1]['trade_type_code'], 2)
+        self.assertEqual(result[0]["year"], 2024)
+        self.assertEqual(result[1]["trade_type_code"], 2)
 
     def test_special_values(self):
+        """
+        Test handling of special values in creative goods trade data.
+        Verifies that special percentage values are converted to None and values are integers.
+        """
         result = get_creative_goods_trade()
         for item in result:
             # All test data has 999.9% which should be converted to None
-            self.assertIsNone(item['percentage'])
+            self.assertIsNone(item["percentage"])
             # Values should be converted to int except special cases
-            self.assertTrue(isinstance(item['value'], int) or item['value'] is None)
+            self.assertTrue(isinstance(item["value"], int) or item["value"] is None)
+
 
 if __name__ == "__main__":
     unittest.main()

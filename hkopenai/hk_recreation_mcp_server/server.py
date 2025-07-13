@@ -19,18 +19,7 @@ def create_mcp_server():
     """
     mcp = FastMCP(name="HK OpenAI recreation Server")
 
-    @mcp.tool(
-        description="Domestic Exports, Re-exports and Imports of Creative Goods in Hong Kong"
-    )
-    def get_creative_goods_trade(
-        start_year: Annotated[
-            Optional[int], Field(description="Start year of range")
-        ] = None,
-        end_year: Annotated[
-            Optional[int], Field(description="End year of range")
-        ] = None,
-    ) -> List[Dict]:
-        return tool_creative_goods_trade.get_creative_goods_trade(start_year, end_year)
+    tool_creative_goods_trade.register(mcp)
 
     return mcp
 

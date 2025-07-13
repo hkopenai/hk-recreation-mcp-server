@@ -35,7 +35,30 @@ def fetch_creative_goods_data() -> List[Dict]:
     return list(reader)
 
 
-def get_creative_goods_trade(
+def register(mcp):
+    """Registers the creative goods trade tool with the FastMCP server."""
+    @mcp.tool(
+        description="Domestic Exports, Re-exports and Imports of Creative Goods in Hong Kong"
+    )
+    def get_creative_goods_trade(
+        start_year: Annotated[
+            Optional[int], Field(description="Start year of range")
+        ] = None,
+        end_year: Annotated[Optional[int], Field(description="End year of range")] = None,
+    ) -> List[Dict]:
+        """Get Domestic Exports, Re-exports and Imports of Creative Goods in Hong Kong
+
+        Args:
+            start_year: Optional start year filter
+            end_year: Optional end year filter
+
+        Returns:
+            List of trade records with mapped category/trade type names and cleaned values
+        """
+        return _get_creative_goods_trade(start_year, end_year)
+
+
+def _get_creative_goods_trade(
     start_year: Annotated[
         Optional[int], Field(description="Start year of range")
     ] = None,

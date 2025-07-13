@@ -4,7 +4,6 @@ This module provides functionality to configure and start the server with tools
 for accessing data related to creative goods trade in Hong Kong.
 """
 
-import argparse
 from fastmcp import FastMCP
 from hkopenai.hk_recreation_mcp_server import tool_creative_goods_trade
 from typing import Dict, List, Annotated, Optional
@@ -36,15 +35,15 @@ def create_mcp_server():
     return mcp
 
 
-def main(args):
+def main(host: str, port: int, sse: bool):
     """
     Main function to run the MCP Server.
     Parses command line arguments and starts the server in either SSE or stdio mode.
     """
     server = create_mcp_server()
 
-    if args.sse:
-        server.run(transport="streamable-http", host=args.host, port=args.port)
+    if sse:
+        server.run(transport="streamable-http", host=host, port=port)
         print(f"MCP Server running in SSE mode on port {args.port}, bound to {args.host}")
     else:
         server.run()

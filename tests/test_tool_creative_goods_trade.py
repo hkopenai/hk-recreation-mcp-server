@@ -17,6 +17,7 @@ class TestCreativeGoodsTrade(unittest.TestCase):
     Test class for verifying the functionality of creative goods trade data processing.
     This class tests data fetching and processing logic with mocked CSV data.
     """
+
     CSV_DATA = """Year,CI_Goods_Cat,Trade_Type,Values,Percentage,Last Update
 2025,1,1,47873,999.9%,31/03/2025
 2025,2,1,177,999.9%,31/03/2025

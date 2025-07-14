@@ -5,15 +5,14 @@ for accessing data related to creative goods trade in Hong Kong.
 """
 
 from fastmcp import FastMCP
+
 from hkopenai.hk_recreation_mcp_server import tool_creative_goods_trade
-from typing import Dict, List, Annotated, Optional
-from pydantic import Field
 
 
 def create_mcp_server():
     """
     Create and configure the MCP server.
-    
+
     Returns:
         FastMCP: Configured MCP server instance with tools for creative goods trade data.
     """
@@ -33,7 +32,9 @@ def main(host: str, port: int, sse: bool):
 
     if sse:
         server.run(transport="streamable-http", host=host, port=port)
-        print(f"MCP Server running in SSE mode on port {args.port}, bound to {args.host}")
+        print(
+            f"MCP Server running in SSE mode on port {args.port}, bound to {args.host}"
+        )
     else:
         server.run()
         print("MCP Server running in stdio mode")

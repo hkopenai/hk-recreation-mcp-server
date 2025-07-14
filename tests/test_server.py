@@ -13,13 +13,14 @@ class TestApp(unittest.TestCase):
     Test class for verifying MCP server creation and tool functionality.
     This class tests the initialization of the server and the registration of tools.
     """
+
     @patch("hkopenai.hk_recreation_mcp_server.server.FastMCP")
     @patch("hkopenai.hk_recreation_mcp_server.server.tool_creative_goods_trade")
     def test_create_mcp_server(self, mock_tool_creative_goods_trade, mock_fastmcp):
         """
         Test the creation of the MCP server and the registration of tools.
         Verifies that the server is created correctly and tools are registered as expected.
-        
+
         Args:
             mock_tool_creative_goods_trade: Mock for the creative goods trade tool module.
             mock_fastmcp: Mock for the FastMCP class.

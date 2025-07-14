@@ -4,10 +4,11 @@ This module provides tools to retrieve and format data related to domestic expor
 re-exports, and imports of creative goods.
 """
 
-import requests
 import csv
 from io import StringIO
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
+
+import requests
 from pydantic import Field
 from typing_extensions import Annotated
 
@@ -37,6 +38,7 @@ def fetch_creative_goods_data() -> List[Dict]:
 
 def register(mcp):
     """Registers the creative goods trade tool with the FastMCP server."""
+
     @mcp.tool(
         description="Domestic Exports, Re-exports and Imports of Creative Goods in Hong Kong"
     )
@@ -44,7 +46,9 @@ def register(mcp):
         start_year: Annotated[
             Optional[int], Field(description="Start year of range")
         ] = None,
-        end_year: Annotated[Optional[int], Field(description="End year of range")] = None,
+        end_year: Annotated[
+            Optional[int], Field(description="End year of range")
+        ] = None,
     ) -> List[Dict]:
         """Get Domestic Exports, Re-exports and Imports of Creative Goods in Hong Kong
 

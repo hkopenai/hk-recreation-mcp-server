@@ -5,7 +5,7 @@ This module contains unit tests to verify the correct setup and behavior of the 
 
 import unittest
 from unittest.mock import patch, Mock
-from hkopenai.hk_recreation_mcp_server.server import create_mcp_server
+from hkopenai.hk_recreation_mcp_server.server import server
 
 
 class TestApp(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestApp(unittest.TestCase):
     """
 
     @patch("hkopenai.hk_recreation_mcp_server.server.FastMCP")
-    @patch("hkopenai.hk_recreation_mcp_server.server.tool_creative_goods_trade")
+    @patch("hkopenai.hk_recreation_mcp_server.tools.creative_goods_trade")
     def test_create_mcp_server(self, mock_tool_creative_goods_trade, mock_fastmcp):
         """
         Test the creation of the MCP server and the registration of tools.
@@ -34,13 +34,13 @@ class TestApp(unittest.TestCase):
         mock_fastmcp.return_value = mock_server
 
         # Test server creation
-        server = create_mcp_server()
+        mcp_server_instance = server()
 
         # Verify server creation
         mock_fastmcp.assert_called_once()
-        self.assertEqual(server, mock_server)
+        self.assertEqual(mcp_server_instance, mock_server)
 
-        mock_tool_creative_goods_trade.register.assert_called_once_with(mock_server)
+        mock_tool_creative_goods_trade.register.assert_called_once_with(mcp_server_instance)
 
 
 if __name__ == "__main__":

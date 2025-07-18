@@ -6,10 +6,10 @@ for accessing data related to creative goods trade in Hong Kong.
 
 from fastmcp import FastMCP
 
-from hkopenai.hk_recreation_mcp_server import tool_creative_goods_trade
+from .tools import creative_goods_trade
 
 
-def create_mcp_server():
+def server():
     """
     Create and configure the MCP server.
 
@@ -18,23 +18,6 @@ def create_mcp_server():
     """
     mcp = FastMCP(name="HK OpenAI recreation Server")
 
-    tool_creative_goods_trade.register(mcp)
+    creative_goods_trade.register(mcp)
 
     return mcp
-
-
-def main(host: str, port: int, sse: bool):
-    """
-    Main function to run the MCP Server.
-    Parses command line arguments and starts the server in either SSE or stdio mode.
-    """
-    server = create_mcp_server()
-
-    if sse:
-        server.run(transport="streamable-http", host=host, port=port)
-        print(
-            f"MCP Server running in SSE mode on port {port}, bound to {host}"
-        )
-    else:
-        server.run()
-        print("MCP Server running in stdio mode")

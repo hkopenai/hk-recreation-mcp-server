@@ -4,13 +4,10 @@ This module provides tools to retrieve and format data related to domestic expor
 re-exports, and imports of creative goods.
 """
 
-import csv
-from io import StringIO
 from typing import Dict, List, Optional
-
-import requests
 from pydantic import Field
 from typing_extensions import Annotated
+from hkopenai_common.csv_utils import fetch_csv_from_url
 
 # Mapping dictionaries
 CATEGORY_MAP = {
@@ -27,13 +24,13 @@ CATEGORY_MAP = {
 TRADE_TYPE_MAP = {1: "Domestic Exports", 2: "Re-exports", 3: "Imports"}
 
 
-def fetch_creative_goods_data() -> List[Dict]:
+def fetch_creative_goods_data() -> List[Dict] | Dict:
     """Fetch creative goods trade data from CCID website"""
     url = "https://www.ccidahk.gov.hk/data/SCG_TradeTOT.csv"
-    response = requests.get(url)
-    response.encoding = "utf-8"
-    reader = csv.DictReader(StringIO(response.text))
-    return list(reader)
+    data = fetch_csv_from_url(url, encoding="utf-8")
+    if "error" in data:
+        return {"type": "Error", "error": data["error"]}
+    return data
 
 
 def register(mcp):
@@ -78,6 +75,8 @@ def _get_creative_goods_trade(
         List of trade records with mapped category/trade type names and cleaned values
     """
     data = fetch_creative_goods_data()
+    if "error" in data:
+        return {"type": "Error", "error": data["error"]}
 
     # Filter by year range if provided
     if start_year or end_year:

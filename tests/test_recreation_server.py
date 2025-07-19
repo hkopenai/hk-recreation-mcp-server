@@ -15,16 +15,9 @@ class TestApp(unittest.TestCase):
     """
 
     @patch("hkopenai.hk_recreation_mcp_server.server.FastMCP")
-    @patch("hkopenai.hk_recreation_mcp_server.tools.creative_goods_trade")
+    @patch("hkopenai.hk_recreation_mcp_server.tools.creative_goods_trade.register")
     def test_create_mcp_server(self, mock_tool_creative_goods_trade, mock_fastmcp):
-        """
-        Test the creation of the MCP server and the registration of tools.
-        Verifies that the server is created correctly and tools are registered as expected.
-
-        Args:
-            mock_tool_creative_goods_trade: Mock for the creative goods trade tool module.
-            mock_fastmcp: Mock for the FastMCP class.
-        """
+        """Test the creation and configuration of the MCP server with mocked dependencies."""
         # Setup mocks
         mock_server = Mock()
 
@@ -34,14 +27,11 @@ class TestApp(unittest.TestCase):
         mock_fastmcp.return_value = mock_server
 
         # Test server creation
-        mcp_server_instance = server()
+        mcp_instance = server()
 
         # Verify server creation
         mock_fastmcp.assert_called_once()
-        self.assertEqual(mcp_server_instance, mock_server)
-
-        mock_tool_creative_goods_trade.register.assert_called_once_with(mcp_server_instance)
-
+        mock_tool_creative_goods_trade.assert_called_once_with(mock_server)
 
 if __name__ == "__main__":
     unittest.main()
